@@ -65,3 +65,12 @@ divStack = do
   a <- popStack
   b <- popStack
   pushStack (div a b)
+
+parseStrings :: [String] -> Stack ()
+parseStrings (s:ss) = error "Todo: Implement the parser"
+
+interpret :: FilePath -> IO ()
+interpret f = do
+  fullFile <- readFile f
+  let file = lines fullFile
+  print $ parseStrings file

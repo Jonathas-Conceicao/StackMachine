@@ -42,6 +42,12 @@ popStack = do
   putStack hs
   return h
 
+{--peakStack :: Int
+peakStack = do
+  (h:hs) <- getStack
+  putStack hs
+  return h
+--}
 multStack :: Stack ()
 multStack = do
   a <- popStack
@@ -67,8 +73,17 @@ divStack = do
   pushStack (div a b)
 
 parseStrings :: [String] -> Stack ()
-parseStrings (s:ss) = error "Todo: Implement the parser"
-
+--parseStrings _ = error "TODO: implement"
+parseStrings ("SUM":xs)   = sumStack >> (parseStrings xs)
+parseStrings ("SUB":xs)   = subStack >> (parseStrings xs)
+parseStrings ("DIV":xs)   = divStack >> (parseStrings xs)
+parseStrings ("MULT":xs)  = multStack >> (parseStrings xs)
+--parseStrings ("PRINT":xs) = (seq peakStack popStack) >> (parseStrings xs)
+{--parseStrings (x:xs)
+  | y == "PUSH" = (pushStack read(head ys)) >> (parseStrings xs)
+  | otherwise = error "Invalid stack operation"
+  where (y:ys) = words x
+--}
 interpret :: FilePath -> IO ()
 interpret f = do
   fullFile <- readFile f

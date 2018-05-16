@@ -1,5 +1,7 @@
 module StackMachine where
 
+import Debug.Trace
+
 type Values = [Int]
 
 data Stack a = Stack (Values -> (a, Values))
@@ -35,6 +37,10 @@ pushStack :: Int -> Stack ()
 pushStack n = do
   l <- getStack
   putStack (n:l)
+
+printStack :: Stack ()
+printStack = do
+  getStack >>= traceShowM
 
 popStack :: Stack Int
 popStack = do

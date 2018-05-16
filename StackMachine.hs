@@ -48,12 +48,6 @@ popStack = do
   putStack hs
   return h
 
-{--peakStack :: Int
-peakStack = do
-  (h:hs) <- getStack
-  putStack hs
-  return h
---}
 multStack :: Stack ()
 multStack = do
   a <- popStack
@@ -70,26 +64,31 @@ subStack :: Stack ()
 subStack = do
   a <- popStack
   b <- popStack
-  pushStack (a - b)
+  pushStack (b - a)
 
 divStack :: Stack ()
 divStack = do
   a <- popStack
   b <- popStack
-  pushStack (div a b)
+  pushStack (div b a)
 
 parseStrings :: [String] -> Stack ()
---parseStrings _ = error "TODO: implement"
+parseStrings []           = return ()
 parseStrings ("SUM":xs)   = sumStack >> (parseStrings xs)
 parseStrings ("SUB":xs)   = subStack >> (parseStrings xs)
 parseStrings ("DIV":xs)   = divStack >> (parseStrings xs)
 parseStrings ("MULT":xs)  = multStack >> (parseStrings xs)
---parseStrings ("PRINT":xs) = (seq peakStack popStack) >> (parseStrings xs)
-{--parseStrings (x:xs)
-  | y == "PUSH" = (pushStack read(head ys)) >> (parseStrings xs)
+parseStrings ("PRINT":xs) = printStack >> (parseStrings xs)
+parseStrings ("":xs)      = parseStrings xs
+parseStrings (x:xs)
+  | y == "PUSH" = (pushStack $ read $ head ys) >> (parseStrings xs)
   | otherwise = error "Invalid stack operation"
-  where (y:ys) = words x
---}
+  where
+    l  = words x
+    y  = head l
+    ys = tail l
+
+
 interpret :: FilePath -> IO ()
 interpret f = do
   fullFile <- readFile f

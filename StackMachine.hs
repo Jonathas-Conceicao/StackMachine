@@ -1,5 +1,6 @@
 module StackMachine where
 
+import Control.Monad.Fail (MonadFail)
 import Debug.Trace
 
 type Values = [Int]
@@ -26,6 +27,9 @@ instance Monad Stack where
   (Stack h) >>= f = Stack $ \s -> let (a, newS) = h s
                                       (Stack g) = f a
                                   in g newS
+
+instance MonadFail Stack where
+fail = error
 
 getStack :: Stack Values
 getStack = Stack $ \s -> (s, s)
